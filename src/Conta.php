@@ -1,10 +1,33 @@
 <?php
+require "Titular.php";
 
 class Conta
 {
-  private string $cpfTitular;
-  private string $nomeTitular;
-  private float $saldo = 0;
+  private Titular $titular;
+  private float $saldo;
+  private static int $numeroDeContas = 0;
+
+  public function __construct(Titular $titular)
+  {
+    // echo "Criando uma nova conta" . PHP_EOL;
+    $this->saldo = 0;
+    $this->titular = $titular;
+    self::$numeroDeContas++;
+    // self => Conta
+  }
+
+  public function __destruct()
+  {
+    // if (self::$numeroDeContas > 2) {
+    //   echo "Há mais de uma conta ativa";
+    // }
+    self::$numeroDeContas--;
+  }
+
+  public static function recuperaNumeroDeContas(): int
+  {
+    return self::$numeroDeContas;
+  }
 
   public function saca(float $valorASacar)
   {
@@ -34,23 +57,28 @@ class Conta
     $contaDestino->deposita($valorATransferir);
   }
 
-  public function recuperarSaldo(): float {
+  public function recuperarSaldo(): float
+  {
     return $this->saldo;
   }
 
-  public function defineCpfTitular(string $cpf): void {
-    $this->cpfTitular = $cpf;
+  // public function defineCpfTitular(string $cpf): void
+  // {
+  //   $this->cpfTitular = $cpf;
+  // }
+
+  public function recuperarCpfTitular(): string
+  {
+    return $this->titular->recuperaCpf();
   }
 
-  public function recuperarCpfTitular(): string {
-    return $this->cpfTitular;
-  }
+  // public function defineNomeTitular(string $nome): void
+  // {
+  //   $this->nomeTitular = $nome;
+  // }
 
-  public function defineNomeTitular(string $nome): void {
-    $this->nomeTitular = $nome;
-  }
-
-  public function recuperarNomeTitular(): string {
-    return $this->nomeTitular;
+  public function recuperarNomeTitular(): string
+  {
+    return $this->titular->recuperaNome();
   }
 }
